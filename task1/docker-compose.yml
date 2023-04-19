@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  users-db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+       
+  posts-db:
+    image: mysql:5.7
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=posts-db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mydb:/var/lib/mysql
+
+  user-app:
+    depends_on:
+      - users-db
+    image: eds832/userapplication:1.0.0
+    restart: on-failure
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url"  : "jdbc:postgresql://users-db:5432/users",
+        "spring.datasource.username" : "admin",
+        "spring.datasource.password" : "1234",
+        "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.PostgreSQLDialect",
+        "spring.jpa.hibernate.ddl-auto" : "create",
+        "server.port" : "8081"
+      }'
+    
+  post-app:
+    depends_on:
+      - posts-db
+    image: eds832/postapplication:1.0.0
+    restart: on-failure
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url"  : "jdbc:mysql://posts-db:3306/posts-db?useSSL=false",
+        "spring.datasource.username" : "root",
+        "spring.datasource.password" : "1234",
+        "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL5InnoDBDialect",
+        "spring.jpa.hibernate.ddl-auto" : "create",
+        "server.port" : "8082"
+      }'
+    stdin_open: true
+    tty: true
+
+volumes:
+  pgdata:
+  mydb:
