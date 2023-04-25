@@ -1,8 +1,13 @@
 **TASK 1**
 
-**To run the applications execute in Command Prompt:**
+**To run the applications execute in Command Prompt in the root path of task1:**
  
-.\run.bat 
+docker compose up
+
+
+**To stop the applications execute in Command Prompt:**
+
+Ctrl + c
 
 
 **Applications run on:**
@@ -25,7 +30,6 @@
 - docker build -t eds832/userapplication:1.0.0 ./
 - docker push eds832/userapplication:1.0.0
 - cd ./../
-- .\run.bat
 
 
 **Task 1 discription:**

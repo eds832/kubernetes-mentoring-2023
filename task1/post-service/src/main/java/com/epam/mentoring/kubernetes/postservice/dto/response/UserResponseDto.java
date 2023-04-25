@@ -1,5 +1,8 @@
 package com.epam.mentoring.kubernetes.postservice.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @author Eduard_Sardyka
  */
@@ -11,7 +14,11 @@ public class UserResponseDto {
 
     private Long amountOfPosts;
 
-    public UserResponseDto(Long id, String username, Long amountOfPosts) {
+    @JsonCreator
+    public UserResponseDto(
+        @JsonProperty("id") Long id,
+        @JsonProperty("username") String username,
+        @JsonProperty("amountOfPosts") Long amountOfPosts) {
         this.id = id;
         this.username = username;
         this.amountOfPosts = amountOfPosts;

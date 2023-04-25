@@ -27,9 +27,4 @@ public class Config {
         service.addConverter(new UserToUserRequestDtoConverter());
         return service;
     }
-
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder.build();
-    }
 }

@@ -3,13 +3,10 @@ package com.epam.mentoring.kubernetes.postservice.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.epam.mentoring.kubernetes.postservice.domain.User;
 import com.epam.mentoring.kubernetes.postservice.dto.request.UserRequestDto;
@@ -28,13 +25,10 @@ public class UserServiceInvocation {
     @Value("${user.app.url:http://user-app:8081/users/}")
     private String URL;
 
-    private RestTemplate restTemplate;
-
     private ConversionService conversionService;
 
     @Autowired
-    public UserServiceInvocation(RestTemplate restTemplate, ConversionService conversionService) {
-        this.restTemplate = restTemplate;
+    public UserServiceInvocation(ConversionService conversionService) {
         this.conversionService = conversionService;
     }
 
@@ -49,7 +43,12 @@ public class UserServiceInvocation {
     private UserResponseDto getUser(Long id) {
         UserResponseDto userDto = null;
         try {
-            userDto = restTemplate.getForObject(URL + id, UserResponseDto.class);
+            userDto = WebClient.create()
+                .get()
+                .uri(URL + id)
+                .retrieve()
+                .bodyToMono(UserResponseDto.class)
+                .block();
         } catch (Exception e) {
             logger.log(Level.WARNING, "Problem with getting User by id = " + id + ", error message: " + e.getMessage());
         }
@@ -66,13 +65,16 @@ public class UserServiceInvocation {
 
     private UserResponseDto updateUser(User user) {
         UserRequestDto userRequestDto = conversionService.convert(user, UserRequestDto.class);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
-        HttpEntity<UserRequestDto> requestEntity = new HttpEntity<UserRequestDto>(userRequestDto, headers);
         UserResponseDto userResponseDto = null;
         try {
-            ResponseEntity<UserResponseDto> response = restTemplate.exchange(URL + userRequestDto.getId(), HttpMethod.PUT,
-                requestEntity, UserResponseDto.class);
+            ResponseEntity<UserResponseDto> response = WebClient
+                .create()
+                .put()
+                .uri(URL + user.getId())
+                .bodyValue(userRequestDto)
+                .retrieve()
+                .toEntity(UserResponseDto.class)
+                .block();
             if (response.getStatusCode() == HttpStatus.OK) {
                 userResponseDto = response.getBody();
             }

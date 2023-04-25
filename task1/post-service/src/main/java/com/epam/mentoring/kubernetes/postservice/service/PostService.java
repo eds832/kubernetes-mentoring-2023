@@ -67,11 +67,6 @@ public class PostService {
     }
 
     public Post getPost(Long id) {
-        Optional<Post> optionalPost = postRepository.findById(id);
-        if (optionalPost.isPresent()) {
-            return optionalPost.get();
-        } else {
-            return null;
-        }
+        return postRepository.findById(id).orElse(null);
     }
 }
