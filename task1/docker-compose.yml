@@ -27,7 +27,7 @@ services:
     image: eds832/userapplication:1.0.0
     restart: on-failure
     ports:
-      - "8081:8083"
+      - "8081:8080"
     environment:
       SPRING_APPLICATION_JSON: '{
         "spring.datasource.url"  : "jdbc:postgresql://users-db:5432/users",
@@ -35,7 +35,7 @@ services:
         "spring.datasource.password" : "1234",
         "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.PostgreSQLDialect",
         "spring.jpa.hibernate.ddl-auto" : "create",
-        "server.port" : "8083"
+        "server.port" : "8080"
       }'
     depends_on:
       - users-db
@@ -46,7 +46,7 @@ services:
     image: eds832/postapplication:1.0.0
     restart: on-failure
     ports:
-      - "8082:8084"
+      - "8082:8080"
     environment:
       SPRING_APPLICATION_JSON: '{
         "spring.datasource.url"  : "jdbc:mysql://posts-db:3306/posts-db?useSSL=false",
@@ -54,8 +54,8 @@ services:
         "spring.datasource.password" : "1234",
         "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL5InnoDBDialect",
         "spring.jpa.hibernate.ddl-auto" : "create",
-        "server.port" : "8084",
-        "user.app.url" : "http://user-app:8083/users/"
+        "server.port" : "8080",
+        "user.app.url" : "http://user-app:8080/users/"
       }'
     stdin_open: true
     tty: true
