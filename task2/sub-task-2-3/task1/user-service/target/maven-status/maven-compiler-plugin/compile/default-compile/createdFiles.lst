@@ -1,0 +1,12 @@
+com\epam\mentoring\kubernetes\userservice\service\UserService.class
+com\epam\mentoring\kubernetes\userservice\dto\response\UserResponseDto.class
+com\epam\mentoring\kubernetes\userservice\controller\UserController.class
+com\epam\mentoring\kubernetes\userservice\converter\UserToUserResponseDtoConverter.class
+com\epam\mentoring\kubernetes\userservice\controller\requestfailure\UserRequestFailure.class
+com\epam\mentoring\kubernetes\userservice\Application.class
+com\epam\mentoring\kubernetes\userservice\dto\request\UserRequestDto.class
+com\epam\mentoring\kubernetes\userservice\configuration\Config.class
+com\epam\mentoring\kubernetes\userservice\converter\UserRequestDtoToUserConverter.class
+com\epam\mentoring\kubernetes\userservice\domain\User.class
+com\epam\mentoring\kubernetes\userservice\repository\UserRepository.class
+com\epam\mentoring\kubernetes\userservice\controller\GreetingController.class

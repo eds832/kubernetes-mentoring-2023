@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: k8s-program
+  name: post-db
+  labels:
+    database: post
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      database: post
+  template:
+    metadata:
+      labels:
+        database: post
+    spec:
+      containers:
+      - name: post-db
+        image: mysql:5.7
+        ports:
+        - containerPort: 3306
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: '1234'
+          - name: MYSQL_DATABASE
+            value: posts
