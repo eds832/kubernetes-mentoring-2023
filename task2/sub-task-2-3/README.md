@@ -24,7 +24,7 @@ The task uses all the code from Task 1 without EXPOSE 8082 (8081) line in Docker
 
 - docker system prune -a
 - docker volume prune
-- cd cd ./task1/post-service
+- cd ./task1/post-service
 - mvn clean install
 - docker build -t eds832/postapplication:2.0.0 ./
 - login to docker: docker login -u your_login -p your_password
