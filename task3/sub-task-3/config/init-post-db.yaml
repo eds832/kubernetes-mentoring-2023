@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-post-db 
+  namespace: k8s-program
+data:
+  init_post_db: |
+    SET sql_notes = 0;
+    CREATE TABLE IF NOT EXISTS posts (user_id BIGINT NOT NULL PRIMARY KEY,author_id BIGINT NOT NULL,text VARCHAR(100) NOT NULL,posted_at DATE NOT NULL);
+    SET sql_notes = 1; 
+    ALTER TABLE posts ADD COLUMN topic VARCHAR(50) NULL;

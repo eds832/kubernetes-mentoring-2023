@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: post-statefulset-database
+  namespace: k8s-program
+  labels:
+    database: post-statefulset
+spec:
+  selector:
+    matchLabels:
+      database: post-statefulset
+  serviceName: post-statefulset-database
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        database: post-statefulset
+    spec:
+      containers:
+      - name: post-statefulset-database
+        image: mysql:5.7
+        ports:
+          - containerPort: 3306
+        startupProbe:
+          exec:
+            command:
+            - "bash" 
+            - "-c"
+            - "mysql --user=${MYSQL_ROOT_USER_NAME} --password=${MYSQL_ROOT_PASSWORD} --execute=\"SELECT 1;\""
+          failureThreshold: 30
+          periodSeconds: 10
+        livenessProbe:
+          exec:
+            command:
+            - "bash" 
+            - "-c"
+            - "mysql --user=${MYSQL_ROOT_USER_NAME} --password=${MYSQL_ROOT_PASSWORD} --execute=\"SELECT 1;\""
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command: 
+            - "bash" 
+            - "-c"
+            - "mysql --user=${MYSQL_ROOT_USER_NAME} --password=${MYSQL_ROOT_PASSWORD} --execute=\"SHOW DATABASES;\""
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: post-secret
+                key: Post_DB_Root_Password
+          - name: MYSQL_ROOT_USER_NAME
+            valueFrom:
+              secretKeyRef:
+                name: post-secret
+                key: Mysql_User
+          - name: MYSQL_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Mysql_DB
+        volumeMounts:
+          - mountPath: "/mnt/mysql"
+            name: post-statefulset-claim
+          - name: init-post-db-script
+            mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: init-post-db-script
+          configMap:
+            name: init-post-db
+            defaultMode: 420
+            items:
+            - key: init_post_db
+              path: init_post_db.sql
+  volumeClaimTemplates:
+    - metadata:
+        name: post-statefulset-claim
+      spec:
+        accessModes: [ "ReadWriteMany" ]
+        storageClassName: "hostpath"
+        resources:
+          requests:
+            storage: 1Gi

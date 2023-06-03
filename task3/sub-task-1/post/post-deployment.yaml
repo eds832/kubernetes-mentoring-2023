@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-app
+  namespace: k8s-program
+  labels:
+    app: post
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: post
+  template:
+    metadata:
+      labels:
+        app: post
+    spec:
+      containers:
+      - name: post-app
+        image: eds832/postapplication:3.0.0
+        ports:
+          - name: postport
+            containerPort: 8082
+        env:
+          - name: SPRING_DATASOURCE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Post_datasource_url
+          - name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: post-secret
+                key: Mysql_User
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: post-secret
+                key: Post_DB_Root_Password
+          - name: USER_APP_URL
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: User_App_URL
+          - name: SPRING_JPA_HIBERNATE_DDLAUTO
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Post_hibernate_ddlauto
+          - name: SERVER_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Post_server_port
+          - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT          
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Post_hibernate_dialect
+        

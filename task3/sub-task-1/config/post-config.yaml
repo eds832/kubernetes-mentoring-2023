@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: post-config
+  namespace: k8s-program
+data:
+  Post_datasource_url: "jdbc:mysql://post-statefulset-db-service:3307/posts?useSSL=false"
+  Mysql_DB: "posts"
+  Post_hibernate_ddlauto: "create-drop"
+  Post_server_port: "8082"
+  Post_hibernate_dialect: "org.hibernate.dialect.MySQL5InnoDBDialect"
+  User_App_URL: "http://user-service:8083/users/"
