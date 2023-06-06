@@ -29,13 +29,13 @@ spec:
             - pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
           failureThreshold: 30
           periodSeconds: 10
+          initialDelaySeconds: 20
         readinessProbe:
           exec:
             command:
             - /bin/sh
             - -c
             - pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
-          initialDelaySeconds: 20
           periodSeconds: 10
         livenessProbe:
           exec:
@@ -43,7 +43,6 @@ spec:
             - /bin/sh
             - -c
             - pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
-          initialDelaySeconds: 10
           periodSeconds: 10
         env:
           - name: POSTGRES_USER

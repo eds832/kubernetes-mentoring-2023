@@ -29,13 +29,13 @@ spec:
             - "mysql --user=${MYSQL_ROOT_USER_NAME} --password=${MYSQL_ROOT_PASSWORD} --execute=\"SELECT 1;\""
           failureThreshold: 30
           periodSeconds: 10
+          initialDelaySeconds: 20
         livenessProbe:
           exec:
             command:
             - "bash" 
             - "-c"
             - "mysql --user=${MYSQL_ROOT_USER_NAME} --password=${MYSQL_ROOT_PASSWORD} --execute=\"SELECT 1;\""
-          initialDelaySeconds: 20
           periodSeconds: 10
         readinessProbe:
           exec:
@@ -43,7 +43,6 @@ spec:
             - "bash" 
             - "-c"
             - "mysql --user=${MYSQL_ROOT_USER_NAME} --password=${MYSQL_ROOT_PASSWORD} --execute=\"SHOW DATABASES;\""
-          initialDelaySeconds: 10
           periodSeconds: 10
         env:
           - name: MYSQL_ROOT_PASSWORD
