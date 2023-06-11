@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: user-config
-  {{- template "mychart.labels" }}
+  {{- template "mychart.labels" . }}
   namespace: {{ .Values.namespace.name }}
 data:
   Postgres_DB: {{ .Values.userConfig.postgresDB | quote }}
