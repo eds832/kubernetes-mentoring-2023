@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-statefulset-db-service
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    database: user-statefulset
+spec:
+  type: {{ .Values.userStatefulsetDbService.type }}
+  selector:
+    database: user-statefulset
+  ports:
+    {{- .Values.userStatefulsetDbService.ports | toYaml | nindent 2 -}}
