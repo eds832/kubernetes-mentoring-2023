@@ -1,0 +1,79 @@
+userApp:
+  spec:
+    replicas: 2
+  image:
+    repository: eds832/userapplication
+    tag: 4.0.0
+userConfig:
+  postgresDB: users
+  userDatasourceUrl: jdbc:postgresql://user-statefulset-db-service:5433/users
+  userHibernateDdlauto: create-drop
+  userHibernateDialect: org.hibernate.dialect.PostgreSQLDialect
+  userManagementEndpointHealthGroupExploratoryInclude: livenessState,readinessState,ping
+  userManagementEndpointHealthGroupExploratoryShowDetails: always
+  userManagementEndpointHealthProbesEnabled: "true"
+  userManagementEndpointsWebExposureInclude: '*'
+  userManagementHealthLivenessStateEnabled: "true"
+  userManagementHealthReadinessStateEnabled: "true"
+  userManagementSecurityEnabled: "false"
+  userServerPort: "8081"
+initPostDb:
+  initPostDb: "SET sql_notes = 0;CREATE TABLE IF NOT EXISTS posts (user_id BIGINT
+    NOT NULL PRIMARY KEY,author_id BIGINT NOT NULL,text VARCHAR(100) NOT NULL,posted_at
+    DATE NOT NULL);SET sql_notes = 1;ALTER TABLE posts ADD COLUMN topic VARCHAR(50)
+    NULL;"
+initUserDb:
+  initUserDb: |
+    CREATE TABLE users (user_id BIGINT NOT NULL PRIMARY KEY,username VARCHAR(20) NOT NULL,amount_of_posts BIGINT DEFAULT 0);
+kubernetesClusterDomain: cluster.local
+postApp:
+  postApp:
+    image:
+      repository: eds832/postapplication
+      tag: 5.0.0
+  spec:
+    replicas: 2
+postConfig:
+  mysqlDB: posts
+  postDatasourceUrl: jdbc:mysql://post-statefulset-db-service:3307/posts?useSSL=false
+  postHibernateDdlauto: create-drop
+  postHibernateDialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  postManagementEndpointHealthGroupExploratoryInclude: livenessState,readinessState,ping
+  postManagementEndpointHealthGroupExploratoryShowDetails: always
+  postManagementEndpointHealthProbesEnabled: "true"
+  postManagementEndpointsWebExposureInclude: '*'
+  postManagementHealthLivenessStateEnabled: "true"
+  postManagementHealthReadinessStateEnabled: "true"
+  postManagementSecurityEnabled: "false"
+  postServerPort: "8082"
+  userAppURL: http://user-service:8083/users/
+postSecret:
+  mysqlUser: "root"
+  postDBRootPassword: "1234"
+postService:
+  ports:
+  - name: postport
+    port: 8084
+    targetPort: 8082
+  type: ClusterIP
+postStatefulsetDbService:
+  ports:
+  - port: 3307
+    targetPort: 3306
+  type: ClusterIP
+userSecret:
+  postgresPassword: "1234"
+  postgresUser: "admin"
+userService:
+  ports:
+  - name: userport
+    port: 8083
+    targetPort: 8081
+  type: ClusterIP
+userStatefulsetDbService:
+  ports:
+  - port: 5433
+    targetPort: 5432
+  type: ClusterIP
+namespace:
+  name: k8s-program

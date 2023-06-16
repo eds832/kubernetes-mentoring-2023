@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: post-statefulset-db-service
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    database: post-statefulset
+spec:
+  type: {{ .Values.postStatefulsetDbService.type }}
+  selector:
+    database: post-statefulset
+  ports:
+    {{- .Values.postStatefulsetDbService.ports | toYaml | nindent 2 -}}
