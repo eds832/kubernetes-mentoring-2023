@@ -16,14 +16,14 @@ spec:
               service:
                 name: user-service
                 port:
-                  number: 8083
+                  number: 8080
             pathType: Prefix
             path: /user(/|$)(.*)           
           - backend:
               service:
                 name: post-service
                 port:
-                  number: 8084
+                  number: 8080
             pathType: Prefix
             path: /post(/|$)(.*)
             

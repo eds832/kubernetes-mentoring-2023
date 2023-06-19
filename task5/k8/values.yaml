@@ -46,14 +46,14 @@ postConfig:
   postManagementHealthReadinessStateEnabled: "true"
   postManagementSecurityEnabled: "false"
   postServerPort: "8082"
-  userAppURL: http://user-service:8083/users/
+  userAppURL: http://user-service:8080/users/
 postSecret:
   mysqlUser: "root"
   postDBRootPassword: "1234"
 postService:
   ports:
   - name: postport
-    port: 8084
+    port: 8080
     targetPort: 8082
   type: ClusterIP
 postStatefulsetDbService:
@@ -67,7 +67,7 @@ userSecret:
 userService:
   ports:
   - name: userport
-    port: 8083
+    port: 8080
     targetPort: 8081
   type: ClusterIP
 userStatefulsetDbService:
