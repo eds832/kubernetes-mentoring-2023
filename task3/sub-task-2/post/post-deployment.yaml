@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-app
+  namespace: k8s-program
+  labels:
+    app: post
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: post
+  template:
+    metadata:
+      labels:
+        app: post
+    spec:
+      containers:
+      - name: post-app
+        image: eds832/postapplication:4.0.0
+        ports:
+          - name: postport
+            containerPort: 8082
+        startupProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8082
+          initialDelaySeconds: 25
+          failureThreshold: 5
+          periodSeconds: 15
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8082
+          initialDelaySeconds: 25
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8082
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        env:
+          - name: SPRING_DATASOURCE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Post_datasource_url
+          - name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: post-secret
+                key: Mysql_User
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: post-secret
+                key: Post_DB_Root_Password
+          - name: USER_APP_URL
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: User_App_URL
+          - name: SPRING_JPA_HIBERNATE_DDLAUTO
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Post_hibernate_ddlauto
+          - name: SERVER_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Post_server_port
+          - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT          
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Post_hibernate_dialect
+          - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Post_Management_Endpoints_Web_Exposure_Include
+          - name: MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Post_Management_endpoint_health_probes_enabled
+          - name: MANAGEMENT_HEALTH_LIVENESSSTATE_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Post_Management_Health_LivenessState_Enabled
+          - name: MANAGEMENT_HEALTH_READINESSSTATE_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Post_Management_Health_ReadinessState_Enabled
+          - name: MANAGEMENT_ENDPOINT_HEALTH_HEALTH_GROUP_EXPLORATORY_INCLUDE
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Post_Management_Endpoint_Health_Group_Exploratory_Include
+          - name: MANAGEMENT_ENDPOINT_HEALTH_HEALTH_GROUP_EXPLORATORY_SHOW_DETAILS
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Post_Management_Endpoint_Health_Group_Exploratory_Show_Details
+          - name: MANAGEMENT_SECURITY_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: post-config
+                key: Post_Management_Security_Enabled
+        

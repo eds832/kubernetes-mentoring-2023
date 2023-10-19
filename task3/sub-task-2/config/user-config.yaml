@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-config
+  namespace: k8s-program
+data:
+  User_datasource_url: "jdbc:postgresql://user-statefulset-db-service:5433/users"
+  Postgres_DB: "users"
+  User_hibernate_ddlauto: "create-drop"
+  User_server_port: "8081"
+  User_hibernate_dialect: "org.hibernate.dialect.PostgreSQLDialect"
+  User_Management_Endpoints_Web_Exposure_Include: "*"
+  User_Management_endpoint_health_probes_enabled: "true"
+  User_Management_Health_LivenessState_Enabled: "true"
+  User_Management_Health_ReadinessState_Enabled: "true"
+  User_Management_Endpoint_Health_Group_Exploratory_Include: "livenessState,readinessState,ping"
+  User_Management_Endpoint_Health_Group_Exploratory_Show_Details: "always"
+  User_Management_Security_Enabled: "false"

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-app
+  namespace: k8s-program
+  labels:
+    app: user
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: user
+  template:
+    metadata:
+      labels:
+        app: user
+    spec:
+      containers:
+      - name: user-app
+        image: eds832/userapplication:3.0.0
+        ports:
+          - name: userport
+            containerPort: 8081
+        env:
+          - name: SPRING_DATASOURCE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: user-config
+                key: User_datasource_url
+          - name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: user-secret
+                key: Postgres_User
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: user-secret
+                key: Postgres_Password
+          - name: SPRING_JPA_HIBERNATE_DDLAUTO
+            valueFrom:
+              configMapKeyRef:
+                name: user-config
+                key: User_hibernate_ddlauto
+          - name: SERVER_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: user-config
+                key: User_server_port
+          - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+            valueFrom:
+              configMapKeyRef:
+                name: user-config
+                key: User_hibernate_dialect
+        
