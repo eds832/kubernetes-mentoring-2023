@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: post-service
+  namespace: {{ .Values.namespace.name }}
+  labels: 
+    app: post
+spec:
+  type: {{ .Values.postService.type }}
+  selector:
+    app: post
+  ports:
+    {{- .Values.postService.ports | toYaml | nindent 2 -}}

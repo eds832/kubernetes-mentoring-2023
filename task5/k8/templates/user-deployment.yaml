@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-app
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    app: user
+spec:
+  replicas: {{ .Values.userApp.spec.replicas }}
+  selector:
+    matchLabels:
+      app: user
+  template:
+    metadata:
+      labels:
+        app: user
+    spec:
+      containers:
+      - name: user-app
+        image: {{ .Values.userApp.image.repository }}:{{ .Values.userApp.image.tag }}
+        ports:
+          - name: userport
+            containerPort: 8081
+        startupProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8081
+          initialDelaySeconds: 25
+          failureThreshold: 5
+          periodSeconds: 15
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8081
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8081
+          periodSeconds: 5
+        env:
+          - name: SPRING_DATASOURCE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: user-config
+                key: User_datasource_url
+          - name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: user-secret
+                key: Postgres_User
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: user-secret
+                key: Postgres_Password
+          - name: SPRING_JPA_HIBERNATE_DDLAUTO
+            valueFrom:
+              configMapKeyRef:
+                name: user-config
+                key: User_hibernate_ddlauto
+          - name: SERVER_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: user-config
+                key: User_server_port
+          - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+            valueFrom:
+              configMapKeyRef:
+                name: user-config
+                key: User_hibernate_dialect
+          - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+            valueFrom:
+              configMapKeyRef:
+                name: user-config
+                key: User_Management_Endpoints_Web_Exposure_Include
+          - name: MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: user-config
+                key: User_Management_endpoint_health_probes_enabled
+          - name: MANAGEMENT_HEALTH_LIVENESSSTATE_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: user-config
+                key: User_Management_Health_LivenessState_Enabled
+          - name: MANAGEMENT_HEALTH_READINESSSTATE_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: user-config
+                key: User_Management_Health_ReadinessState_Enabled
+          - name: MANAGEMENT_ENDPOINT_HEALTH_HEALTH_GROUP_EXPLORATORY_INCLUDE
+            valueFrom:
+              configMapKeyRef:
+                name: user-config
+                key: User_Management_Endpoint_Health_Group_Exploratory_Include
+          - name: MANAGEMENT_ENDPOINT_HEALTH_HEALTH_GROUP_EXPLORATORY_SHOW_DETAILS
+            valueFrom:
+              configMapKeyRef:
+                name: user-config
+                key: User_Management_Endpoint_Health_Group_Exploratory_Show_Details
+          - name: MANAGEMENT_SECURITY_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: user-config
+                key: User_Management_Security_Enabled
