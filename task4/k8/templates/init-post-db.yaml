@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-post-db 
+  namespace: {{ .Values.namespace.name }}
+data:
+  init_post_db: {{ .Values.initPostDb.initPostDb | quote }}
