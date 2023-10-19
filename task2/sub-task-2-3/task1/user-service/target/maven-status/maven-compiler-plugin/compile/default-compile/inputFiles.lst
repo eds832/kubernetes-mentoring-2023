@@ -1,0 +1,12 @@
+C:\mentoring\kubernetes\task2\sub-task-2\task1\user-service\src\main\java\com\epam\mentoring\kubernetes\userservice\converter\UserRequestDtoToUserConverter.java
+C:\mentoring\kubernetes\task2\sub-task-2\task1\user-service\src\main\java\com\epam\mentoring\kubernetes\userservice\Application.java
+C:\mentoring\kubernetes\task2\sub-task-2\task1\user-service\src\main\java\com\epam\mentoring\kubernetes\userservice\converter\UserToUserResponseDtoConverter.java
+C:\mentoring\kubernetes\task2\sub-task-2\task1\user-service\src\main\java\com\epam\mentoring\kubernetes\userservice\controller\GreetingController.java
+C:\mentoring\kubernetes\task2\sub-task-2\task1\user-service\src\main\java\com\epam\mentoring\kubernetes\userservice\controller\requestfailure\UserRequestFailure.java
+C:\mentoring\kubernetes\task2\sub-task-2\task1\user-service\src\main\java\com\epam\mentoring\kubernetes\userservice\configuration\Config.java
+C:\mentoring\kubernetes\task2\sub-task-2\task1\user-service\src\main\java\com\epam\mentoring\kubernetes\userservice\dto\request\UserRequestDto.java
+C:\mentoring\kubernetes\task2\sub-task-2\task1\user-service\src\main\java\com\epam\mentoring\kubernetes\userservice\service\UserService.java
+C:\mentoring\kubernetes\task2\sub-task-2\task1\user-service\src\main\java\com\epam\mentoring\kubernetes\userservice\repository\UserRepository.java
+C:\mentoring\kubernetes\task2\sub-task-2\task1\user-service\src\main\java\com\epam\mentoring\kubernetes\userservice\dto\response\UserResponseDto.java
+C:\mentoring\kubernetes\task2\sub-task-2\task1\user-service\src\main\java\com\epam\mentoring\kubernetes\userservice\controller\UserController.java
+C:\mentoring\kubernetes\task2\sub-task-2\task1\user-service\src\main\java\com\epam\mentoring\kubernetes\userservice\domain\User.java

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: user-persistent-volume
+  namespace: k8s-program
+  labels:
+    type: local
+spec:
+  capacity: 
+    storage: 1Gi
+  storageClassName: manual
+  hostPath:
+    path: "/mnt/postgres"
+  accessModes:
+    - ReadWriteMany
